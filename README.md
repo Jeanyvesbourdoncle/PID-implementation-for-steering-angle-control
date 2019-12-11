@@ -1,43 +1,50 @@
 ### PID Implementation for steering angle control 
+Cross Track Error (CTE) minimization with the 3 PID hyperparameters 
 
 --------
 #### Target of the project
 The target of this project is to implement 2 controllers :
-- one PID controller for the steering angle control to be sure that the vehicle stays always on the track
-- one P controller for the respect of the maximum speed to be sure that the vehicle doesn't exceed the maximum speed accepted
+- one PID controller for the steering angle control to be sure that the vehicle stays always on the track,
+- one P controller for the respect of the maximum speed to be sure that the vehicle doesn't exceed the maximum speed accepted.
 
 --------
 #### Hypermarameters Definition
-Kp : the target of this hyperparameter is to control proportionnaly the CTE : it's the standard proportional hyperparameter
-Kd : the target of this hyperparameter is to control the CTE  for every cycle time (to delete the oscillation) : it's the derivative hyperparameter : he removes the oscillation and permit to converge on the goal without oscillation.
-Ki : the target of this hyperparameter is to control the sum of the CTE, which cause a systematic error (bias) : it's the integral hyperparameter : he removes the systematic error
+- Kp : the target of this hyperparameter is to control proportionnaly the CTE : it's the standard proportional hyperparameter,
+- Kd : the target of this hyperparameter is to control the CTE  for every cycle time (to delete the oscillation) : it's the derivative hyperparameter : he removes the oscillation and permit to converge on the goal without oscillation,
+- Ki : the target of this hyperparameter is to control the sum of the CTE, which cause a systematic error (bias) : it's the integral hyperparameter : he removes the systematic error.
 
 For the maximum speed limitation, only the Kp is useful, that why we speek about P Controller.
 
 ---------
 #### Hyperparameters tuning
 The method used for this project was the "manual Tuning".
-The others method "TWIDDLE" and "SGD" haven't be used, these two methods will be used in the version 2.0 of this software.
+The others method "TWIDDLE" and "SGD" haven't be used.
 
 For this "manual method", the pipeline is :
-- the first step is to configure the maximum speed with 5 MPH at the beginning to find the best hyperparameters
-- the second step is to increase gradually the Kp
-- when the first oscillation comes, the Kd Hyperparameters must be gradually increased to delete these oscillation
-- after a couple of cycle time, the Ki hyperparameters will be tuned to delete the systematic mistake (bias)
+- the first step is to configure the maximum speed with 5 MPH at the beginning to find the best hyperparameters,
+- the second step is to increase gradually the Kp,
+- when the first oscillation comes, the Kd Hyperparameters must be gradually increased to delete these oscillation,
+- after a couple of cycle time, the Ki hyperparameters will be tuned to delete the systematic mistake (bias).
 
 This pipeline will be reproduce with 10 MPH and 15 MPH to find the best hyperparameters.
-The result of this pipeline are : steering_angle_pid.Init(0.15,0.003,1.0);
+
+The result of this pipeline are : steering_angle_pid.Init(0.15,0.003,1.0).
 
 For the second controller (P Controller), we don't used this pipeline, only the Kp hyperparameters must be configured with 0.1.
+
 For this controller, the Kd and the Ki are not useful.
-The result is : speed_pid.Init(0.1,0.000,0.0);
+
+The result is : speed_pid.Init(0.1,0.000,0.0).
 
 -----------
 #### Others comments
-The maximum speed is configured with 20 MPH
-The safety criterion are fullfilled : the vehicule stays always on the track and stays always under 20 MPH (maximum speed acepted)
-The confort criterion are fullfilled : in the sharp turm (-1 <steer_value or steer_value > 1 ), the steer_value is configured with +/- 0.5
+The maximum speed is configured with 20 MPH.
+
+The safety criterion are fullfilled : the vehicule stays always on the track and stays always under 20 MPH (maximum speed acepted).
+
+The confort criterion are fullfilled : in the sharp turm (-1 <steer_value or steer_value > 1 ), the steer_value is configured with +/- 0.5.
 The manual method was here choosen.
+
 This method is very long and not totally  optimal (groping solution), a second version of this software will be made later with the Twiddle and the SGD algoritm.
 
 -----------
